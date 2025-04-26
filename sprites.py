@@ -68,15 +68,23 @@ class Player(pygame.sprite.Sprite):
             if hits:
                 if self.x_change > 0:
                     self.rect.x = hits[0].rect.left - self.rect.width
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.x += PLAYER_SPEED
                 if self.x_change < 0:
                     self.rect.x = hits[0].rect.right
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.x -= PLAYER_SPEED
         if direction == 'y':
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits:
                 if self.y_change > 0:
                     self.rect.y = hits[0].rect.top - self.rect.height
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y += PLAYER_SPEED
                 if self.y_change < 0:
                     self.rect.y = hits[0].rect.bottom
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y -= PLAYER_SPEED
 
 
     def collide_enemy(self):
@@ -91,6 +99,7 @@ class Enemy(pygame.sprite.Sprite):
         self._layer = ENEMY_LAYER
         self.groups = self.game.all_sprites, self.game.enemies
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.speed = random.randint(3, 7)
 
         self.x = x * TILESIZE
         self.y = y * TILESIZE
@@ -104,7 +113,7 @@ class Enemy(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-        self.image = pygame.image.load('./images/car1.png')
+        self.image = pygame.image.load('./images/car'+random.choice(['1', '2', '3', '4'])+'.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
         self.rect = self.image.get_rect()
@@ -123,12 +132,12 @@ class Enemy(pygame.sprite.Sprite):
 
     def movement(self):
         if self.facing == 'up':
-            self.y_change -= ENEMY_SPEED
+            self.y_change -= self.speed
             self.movement_loop -= 1
             if self.movement_loop <= -self.travel:
                 self.facing = 'down'
         if self.facing == 'down':
-            self.y_change += ENEMY_SPEED
+            self.y_change += self.speed
             self.movement_loop += 1
             if self.movement_loop >= self.travel:
                 self.facing = 'up'
