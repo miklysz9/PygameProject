@@ -10,17 +10,45 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.font = pygame.font.Font(None, 36)
+        self.stage = 1
 
     def create_tilemap(self):
-        for i, row in enumerate(tilemap):
-            for j, column in enumerate(row):
-                Ground(self, j, i)
-                if column == "b":
-                    Block(self, j, i)
-                if column == "P":
-                    Player(self, j, i)
-                if column == "E":
-                    Enemy(self, j, i)
+        if self.stage == 1:
+            for i, row in enumerate(tilemap1):
+                for j, column in enumerate(row):
+                    Ground(self, j, i)
+                    if column == "b":
+                        Block(self, j, i)
+                    if column == "P":
+                        Player(self, j, i)
+                    if column == "E":
+                        Enemy(self, j, i)
+                    if column == "D":
+                        Door(self, j, i)
+        if self.stage == 2:
+            for i, row in enumerate(tilemap2):
+                for j, column in enumerate(row):
+                    Ground(self, j, i)
+                    if column == "b":
+                        Block(self, j, i)
+                    if column == "P":
+                        Player(self, j, i)
+                    if column == "E":
+                        Enemy(self, j, i)
+                    if column == "D":
+                        Door(self, j, i)
+        if self.stage == 3:
+            for i, row in enumerate(tilemap3):
+                for j, column in enumerate(row):
+                    Ground(self, j, i)
+                    if column == "b":
+                        Block(self, j, i)
+                    if column == "P":
+                        Player(self, j, i)
+                    if column == "E":
+                        Enemy(self, j, i)
+                    if column == "D":
+                        Door(self, j, i)
 
     def new(self):
         # a new game
@@ -29,6 +57,7 @@ class Game:
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.blocks = pygame.sprite.LayeredUpdates()
         self.enemies = pygame.sprite.LayeredUpdates()
+        self.door = pygame.sprite.LayeredUpdates()
 
         self.create_tilemap()
 
@@ -60,7 +89,7 @@ class Game:
 
     def game_over(self):
 
-        text = self.font.render("Naciśnij R, aby zagrać ponownie", True, WHITE)
+        text = self.font.render("KONIEC R, aby kontynuować", True, WHITE)
         text_rect = text.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))
 
         for sprite in self.all_sprites:

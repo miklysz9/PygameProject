@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
         self.collide_enemy()
+        self.collide_door()
 
         self.rect.x += self.x_change
         self.collide_blocks('x')
@@ -90,6 +91,13 @@ class Player(pygame.sprite.Sprite):
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
+            self.kill()
+            self.game.playing = False
+
+    def collide_door(self):
+        hits = pygame.sprite.spritecollide(self, self.game.door, False)
+        if hits:
+            self.game.stage+=1
             self.kill()
             self.game.playing = False
 
@@ -169,8 +177,12 @@ class Block(pygame.sprite.Sprite):
         self.y = y * TILESIZE
         self.width = TILESIZE
         self.height = TILESIZE
-
-        self.image = pygame.image.load('./images/tree.png')
+        if self.game.stage == 1:
+            self.image = pygame.image.load('./images/tree.png')
+        if self.game.stage == 2:
+            self.image = pygame.image.load('./images/ice_peak'+random.choice(['1', '2'])+'.png')
+        if self.game.stage == 3:
+            self.image = pygame.image.load('./images/sand_peak'+random.choice(['1', '2'])+'.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
         self.rect = self.image.get_rect()
@@ -189,7 +201,31 @@ class Ground(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
-        self.image = pygame.image.load('./images/dirt.png')
+        if self.game.stage == 1:
+            self.image = pygame.image.load('./images/dirt.png')
+        if self.game.stage == 2:
+            self.image = pygame.image.load('./images/snow.png')
+        if self.game.stage == 3:
+            self.image = pygame.image.load('./images/sand' + random.choice(['1', '2']) + '.png')
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+class Door(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = BLOCK_LAYER
+        self.groups = self.game.all_sprites, self.game.door
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.width = TILESIZE
+        self.height = TILESIZE
+
+        self.image = pygame.image.load('./images/door.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
         self.rect = self.image.get_rect()
