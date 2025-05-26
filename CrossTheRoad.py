@@ -25,7 +25,7 @@ class Game:
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = True
-        # self.font = pygame.font.Font(None, 36)
+        self.font = pygame.font.Font(None, 36)
         self.reset_game()
 
         self.font = pygame.font.SysFont("arial", 28)
